@@ -1,0 +1,61 @@
+# Gradle配置模板文件
+# 将此文件重命名为 gradle.properties 并放置在项目根目录
+
+# ===== JVM内存配置 =====
+# 解决 "Java heap space" 错误
+org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError
+
+# ===== Gradle性能优化 =====
+# 启用Gradle守护进程
+org.gradle.daemon=true
+
+# 启用并行构建
+org.gradle.parallel=true
+
+# 启用配置缓存
+org.gradle.configureondemand=true
+
+# 启用构建缓存
+org.gradle.caching=true
+
+# ===== Android配置 =====
+# 启用AndroidX
+android.useAndroidX=true
+
+# 禁用Jetifier（推荐，减少内存使用）
+# 如果项目中有旧的Support库依赖，可能需要设置为true
+android.enableJetifier=false
+
+# 启用Android构建缓存
+android.enableBuildCache=true
+
+# ===== 其他优化配置 =====
+# 启用R8代码压缩和混淆
+android.enableR8=true
+
+# 启用增量注解处理
+kapt.incremental.apt=true
+
+# 启用Kotlin增量编译
+kotlin.incremental=true
+
+# ===== 网络配置 =====
+# 如果在企业网络环境中，可能需要配置代理
+# systemProp.http.proxyHost=proxy.company.com
+# systemProp.http.proxyPort=8080
+# systemProp.https.proxyHost=proxy.company.com
+# systemProp.https.proxyPort=8080
+
+# ===== 调试配置 =====
+# 启用详细日志（仅在调试时使用）
+# org.gradle.logging.level=info
+
+# 启用构建扫描（用于性能分析）
+# org.gradle.scan.termsOfServiceUrl=https://gradle.com/terms-of-service
+# org.gradle.scan.termsOfServiceAgree=yes
+
+# ===== 说明 =====
+# 1. 如果仍然遇到内存问题，可以尝试增加 -Xmx 值到 6g 或 8g
+# 2. 在低配置机器上，可以适当减少内存分配
+# 3. 如果项目较小，可以禁用并行构建以节省内存
+# 4. 更多配置选项请参考 Gradle 官方文档

@@ -1,0 +1,193 @@
+{
+  "sdk_info": {
+    "name": "Questionnaire SDK",
+    "version": "1.2.1",
+    "build_number": "121",
+    "release_date": "2024-01-16",
+    "build_date": "2024-01-01T12:00:00Z",
+    "description": "Android问卷调查SDK，基于Flutter技术开发"
+  },
+  "components": {
+    "flutter_aar": {
+      "group_id": "com.kunlun.android.questionnaire",
+      "artifact_id": "flutter",
+      "version": "1.0",
+      "variants": ["debug", "profile", "release"],
+      "description": "Flutter问卷调查核心模块"
+    },
+    "android_sdk": {
+      "name": "sdk-release.aar",
+      "version": "1.0.0",
+      "size_mb": "~2.5",
+      "description": "Android SDK封装库"
+    },
+    "external_libs": {
+      "kunlun_jar": {
+        "name": "kunlun.v6.012.1617-all.jar",
+        "version": "6.012.1617",
+        "size_mb": "~8.2",
+        "description": "Kunlun第三方SDK"
+      },
+      "kunlun_swift_aar": {
+        "name": "kunlun_swift.v1.101.2811.aar",
+        "version": "1.101.2811",
+        "size_mb": "~3.1",
+        "description": "KunlunSwift第三方SDK"
+      }
+    }
+  },
+  "requirements": {
+    "android": {
+      "min_sdk_version": 21,
+      "target_sdk_version": 34,
+      "compile_sdk_version": 34
+    },
+    "gradle": {
+      "min_version": "7.0",
+      "recommended_version": "7.4.2"
+    },
+    "java": {
+      "min_version": "1.8",
+      "recommended_version": "11"
+    },
+    "flutter": {
+      "min_version": "3.0.0",
+      "recommended_version": "3.16.0"
+    }
+  },
+  "permissions": {
+    "required": [
+      "android.permission.INTERNET",
+      "android.permission.ACCESS_NETWORK_STATE"
+    ],
+    "optional": [
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+      "android.permission.READ_EXTERNAL_STORAGE"
+    ]
+  },
+  "features": {
+    "question_types": [
+      "single_choice",
+      "multiple_choice",
+      "text_input",
+      "rating",
+      "image_display"
+    ],
+    "languages": [
+      "zh-CN",
+      "en-US",
+      "zh-HK",
+      "ja-JP",
+      "ko-KR"
+    ],
+    "themes": [
+      "default",
+      "light",
+      "dark"
+    ]
+  },
+  "api_endpoints": {
+    "questionnaire_data": "/api/questionnaire/{id}",
+    "submit_answers": "/api/questionnaire/{id}/submit",
+    "user_progress": "/api/user/{userId}/progress"
+  },
+  "file_checksums": {
+    "sdk-release.aar": "sha256:placeholder_checksum_1",
+    "kunlun.v6.012.1617-all.jar": "sha256:placeholder_checksum_2",
+    "kunlun_swift.v1.101.2811.aar": "sha256:placeholder_checksum_3"
+  },
+  "documentation": {
+    "readme": "docs/README.md",
+    "api_reference": "docs/API_REFERENCE.md",
+    "integration_example": "docs/INTEGRATION_EXAMPLE.md",
+    "changelog": "docs/CHANGELOG.md",
+    "troubleshooting": "docs/TROUBLESHOOTING.md"
+  },
+  "changelog": {
+    "v1.2.1": {
+      "date": "2024-01-16",
+      "changes": [
+        "修复Function类型错误：type 'Null' is not a subtype of type 'Function'",
+        "改进HTTP请求回调函数的空值检查",
+        "优化getVoteByRequest方法的缓存逻辑",
+        "更新故障排除文档，新增Function类型错误解决方案",
+        "增强诊断工具，支持检测回调接口实现"
+      ],
+      "fixes": [
+        "修复HTTP请求回调函数为null导致的崩溃",
+        "修复页面缓存时空字符串解析错误",
+        "修复异步操作中回调函数丢失问题"
+      ]
+    },
+    "v1.2.0": {
+      "date": "2024-01-15",
+      "changes": [
+        "新增自动诊断工具diagnose.sh",
+        "完善故障排除文档，新增SDK重复依赖错误解决方案",
+        "优化install.sh脚本，自动配置exclude规则防止重复类错误",
+        "新增gradle.properties.template模板文件",
+        "改进安装流程，自动配置内存优化参数"
+      ],
+      "fixes": [
+        "修复Java heap space内存不足问题",
+        "修复Duplicate class重复类错误",
+        "修复SDK重复依赖导致的构建失败"
+      ]
+    }
+  },
+  "tools": {
+    "install.sh": {
+      "description": "自动安装脚本，支持gradle.properties配置和build.gradle优化",
+      "features": [
+        "自动复制SDK文件和依赖",
+        "配置gradle.properties解决内存问题",
+        "生成优化的build.gradle配置",
+        "自动配置exclude规则防止重复类错误",
+        "安装诊断工具到目标项目"
+      ]
+    },
+    "diagnose.sh": {
+      "description": "智能诊断工具，自动检测和修复常见集成问题",
+      "features": [
+        "自动检测Gradle内存配置问题",
+        "识别重复依赖声明",
+        "验证AAR文件完整性",
+        "检查权限配置",
+        "自动修复常见配置问题",
+        "生成详细的诊断报告",
+        "支持交互式修复流程"
+      ]
+    },
+    "gradle.properties.template": {
+      "description": "Gradle配置模板，优化构建性能和内存使用",
+      "features": [
+        "JVM内存优化配置",
+        "AndroidX和Jetifier设置",
+        "Gradle守护进程和并行构建",
+        "R8和增量编译优化"
+      ]
+    }
+  },
+  "support": {
+    "email": "tech-support@example.com",
+    "documentation_url": "https://questionnaire-sdk.example.com/docs",
+    "github_url": "https://github.com/example/questionnaire-sdk",
+    "issue_tracker": "https://github.com/example/questionnaire-sdk/issues"
+  },
+  "license": {
+    "type": "Commercial",
+    "file": "LICENSE.txt",
+    "description": "商业许可证，具体条款请联系开发团队"
+  },
+  "build_info": {
+    "build_machine": "CI/CD Pipeline",
+    "build_tools": {
+      "gradle": "7.4.2",
+      "android_gradle_plugin": "7.4.2",
+      "flutter": "3.16.0",
+      "dart": "3.2.0"
+    },
+    "git_commit": "placeholder_commit_hash",
+    "git_branch": "main"
+  }
+}

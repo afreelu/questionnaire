@@ -58,6 +58,29 @@ trae_wj/
 
 ## 快速开始
 
+### 方法一：远程安装（推荐）
+
+1. **直接从GitHub安装**
+   ```bash
+   curl -L https://github.com/afreelu/questionnaire/raw/main/library/remote_install.sh | bash -s /path/to/your/android/project
+   ```
+
+2. **或下载脚本后安装**
+   ```bash
+   wget https://github.com/afreelu/questionnaire/raw/main/library/remote_install.sh
+   chmod +x remote_install.sh
+   ./remote_install.sh /path/to/your/android/project v1.2.1
+   ```
+
+### 方法二：Gradle集成
+
+在 `app/build.gradle` 中添加：
+```gradle
+apply from: 'https://github.com/afreelu/questionnaire/raw/main/library/gradle_integration.gradle'
+```
+
+### 方法三：本地安装
+
 1. **下载SDK**
    ```bash
    git clone https://github.com/afreelu/questionnaire.git

@@ -1,0 +1,186 @@
+// Questionnaire SDK Gradle集成配置
+// 使用方法: 在app/build.gradle中添加 apply from: 'path/to/gradle_integration.gradle'
+
+// 配置参数
+ext.questionnaire_sdk_version = project.hasProperty('questionnaire_sdk_version') ? 
+    project.questionnaire_sdk_version : '1.2.1'
+ext.questionnaire_repo_url = 'https://github.com/afreelu/questionnaire'
+ext.questionnaire_libs_dir = 'libs'
+
+// 创建下载任务
+task downloadQuestionnaireSdk {
+    description = '下载Questionnaire SDK AAR文件'
+    group = 'questionnaire'
+    
+    doLast {
+        def libsDir = file("${project.projectDir}/${questionnaire_libs_dir}")
+        libsDir.mkdirs()
+        
+        def version = questionnaire_sdk_version.startsWith('v') ? 
+            questionnaire_sdk_version : "v${questionnaire_sdk_version}"
+        
+        def files = [
+            'questionnaire_sdk-release.aar',
+            'kunlun.v6.012.1617-all.jar',
+            'kunlun_swift.v1.101.2811.aar'
+        ]
+        
+        files.each { filename ->
+            def url = "${questionnaire_repo_url}/releases/download/${version}/${filename}"
+            def outputFile = new File(libsDir, filename)
+            
+            if (!outputFile.exists()) {
+                println "下载 ${filename}..."
+                try {
+                    new URL(url).withInputStream { input ->
+                        outputFile.withOutputStream { output ->
+                            output << input
+                        }
+                    }
+                    println "✓ ${filename} 下载完成"
+                } catch (Exception e) {
+                    println "⚠ ${filename} 下载失败: ${e.message}"
+                }
+            } else {
+                println "✓ ${filename} 已存在"
+            }
+        }
+    }
+}
+
+// 创建清理任务
+task cleanQuestionnaireSdk {
+    description = '清理Questionnaire SDK文件'
+    group = 'questionnaire'
+    
+    doLast {
+        def libsDir = file("${project.projectDir}/${questionnaire_libs_dir}")
+        def files = [
+            'questionnaire_sdk-release.aar',
+            'kunlun.v6.012.1617-all.jar',
+            'kunlun_swift.v1.101.2811.aar'
+        ]
+        
+        files.each { filename ->
+            def file = new File(libsDir, filename)
+            if (file.exists()) {
+                file.delete()
+                println "✓ 删除 ${filename}"
+            }
+        }
+    }
+}
+
+// 创建版本检查任务
+task checkQuestionnaireSdkVersion {
+    description = '检查Questionnaire SDK最新版本'
+    group = 'questionnaire'
+    
+    doLast {
+        try {
+            def apiUrl = 'https://api.github.com/repos/afreelu/questionnaire/releases/latest'
+            def connection = new URL(apiUrl).openConnection()
+            connection.setRequestProperty('User-Agent', 'Gradle-Build')
+            
+            def response = connection.inputStream.text
+            def json = new groovy.json.JsonSlurper().parseText(response)
+            def latestVersion = json.tag_name
+            
+            println "当前配置版本: ${questionnaire_sdk_version}"
+            println "最新可用版本: ${latestVersion}"
+            
+            if ("v${questionnaire_sdk_version}" != latestVersion) {
+                println "⚠ 发现新版本，建议更新"
+            } else {
+                println "✓ 已是最新版本"
+            }
+        } catch (Exception e) {
+            println "⚠ 无法检查版本: ${e.message}"
+        }
+    }
+}
+
+// 自动配置依赖
+android {
+    // 确保编译版本足够新
+    if (compileSdkVersion < 33) {
+        println "⚠ 建议使用 compileSdkVersion 33 或更高版本"
+    }
+    
+    defaultConfig {
+        // 启用MultiDex（如果尚未启用）
+        if (!multiDexEnabled) {
+            multiDexEnabled true
+        }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+// 添加依赖
+dependencies {
+    // 添加libs目录中的所有AAR和JAR文件
+    implementation fileTree(dir: questionnaire_libs_dir, include: ['*.jar', '*.aar'])
+    
+    // MultiDex支持
+    implementation 'androidx.multidex:multidex:2.0.1'
+}
+
+// 在构建前自动下载SDK
+preBuild.dependsOn downloadQuestionnaireSdk
+
+// 添加清理任务到clean
+clean.dependsOn cleanQuestionnaireSdk
+
+// 打印配置信息
+gradle.projectsEvaluated {
+    println ""
+    println "=== Questionnaire SDK 配置 ==="
+    println "版本: ${questionnaire_sdk_version}"
+    println "库目录: ${questionnaire_libs_dir}"
+    println "仓库: ${questionnaire_repo_url}"
+    println ""
+    println "可用任务:"
+    println "  ./gradlew downloadQuestionnaireSdk  - 下载SDK文件"
+    println "  ./gradlew cleanQuestionnaireSdk     - 清理SDK文件"
+    println "  ./gradlew checkQuestionnaireSdkVersion - 检查版本"
+    println ""
+}
+
+// 扩展属性，允许自定义配置
+ext {
+    questionnaireSdk {
+        // 设置版本
+        version = { String ver ->
+            questionnaire_sdk_version = ver
+        }
+        
+        // 设置库目录
+        libsDir = { String dir ->
+            questionnaire_libs_dir = dir
+        }
+        
+        // 强制重新下载
+        forceDownload = {
+            downloadQuestionnaireSdk.outputs.upToDateWhen { false }
+        }
+    }
+}
+
+// 使用示例（在app/build.gradle中）:
+/*
+apply from: '../library/gradle_integration.gradle'
+
+// 可选：自定义配置
+questionnaireSdk {
+    version '1.2.1'
+    libsDir 'libs'
+    forceDownload()
+}
+
+// 或者通过项目属性配置（在gradle.properties中）:
+// questionnaire_sdk_version=1.2.1
+*/

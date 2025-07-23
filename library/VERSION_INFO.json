@@ -1,9 +1,9 @@
 {
   "sdk_info": {
     "name": "Questionnaire SDK",
-    "version": "1.2.1",
-    "build_number": "121",
-    "release_date": "2024-01-16",
+    "version": "1.2.2",
+  "build_number": "122",
+  "release_date": "2024-01-16",
     "build_date": "2024-01-01T12:00:00Z",
     "description": "Android问卷调查SDK，基于Flutter技术开发"
   },
@@ -104,6 +104,23 @@
     "troubleshooting": "docs/TROUBLESHOOTING.md"
   },
   "changelog": {
+    "v1.2.2": {
+      "date": "2024-01-16",
+      "changes": [
+        "新增远程AAR库集成支持",
+        "添加remote_install.sh远程安装脚本",
+        "创建Gradle自动集成配置文件",
+        "完善远程集成文档和使用指南",
+        "支持从GitHub Releases直接下载AAR文件",
+        "添加版本检查和自动更新功能"
+      ],
+      "features": [
+        "支持curl一键安装：curl -L [script_url] | bash",
+        "Gradle插件式集成：apply from: [gradle_url]",
+        "自动版本检查和更新提醒",
+        "多种集成方式：远程、本地、Gradle"
+      ]
+    },
     "v1.2.1": {
       "date": "2024-01-16",
       "changes": [
@@ -137,25 +154,49 @@
   },
   "tools": {
     "install.sh": {
-      "description": "自动安装脚本，支持gradle.properties配置和build.gradle优化",
+      "description": "本地自动安装脚本，支持一键配置Android项目",
       "features": [
-        "自动复制SDK文件和依赖",
-        "配置gradle.properties解决内存问题",
-        "生成优化的build.gradle配置",
-        "自动配置exclude规则防止重复类错误",
-        "安装诊断工具到目标项目"
+        "自动检测项目结构",
+        "配置gradle.properties内存优化",
+        "添加AAR文件到libs目录",
+        "配置build.gradle依赖",
+        "生成详细安装报告",
+        "安装诊断工具diagnose.sh"
+      ]
+    },
+    "remote_install.sh": {
+      "description": "远程安装脚本，从GitHub直接下载和安装SDK",
+      "features": [
+        "从GitHub Releases下载最新AAR文件",
+        "支持指定版本或使用latest标签",
+        "自动配置项目依赖和设置",
+        "网络连接检查和错误处理",
+        "生成使用示例代码",
+        "版本检查和更新提醒",
+        "一键安装：curl -L [url] | bash"
+      ]
+    },
+    "gradle_integration.gradle": {
+      "description": "Gradle插件式集成配置，支持自动下载和管理SDK",
+      "features": [
+        "Gradle任务自动下载SDK文件",
+        "版本管理和检查",
+        "构建时自动依赖解析",
+        "清理和重新下载任务",
+        "可配置的SDK版本和目录",
+        "与现有构建流程无缝集成"
       ]
     },
     "diagnose.sh": {
-      "description": "智能诊断工具，自动检测和修复常见集成问题",
+      "description": "SDK集成诊断工具，自动检测和修复常见问题",
       "features": [
-        "自动检测Gradle内存配置问题",
-        "识别重复依赖声明",
-        "验证AAR文件完整性",
-        "检查权限配置",
+        "Gradle内存配置检查",
+        "重复依赖检测和修复",
+        "AAR文件完整性验证",
+        "AndroidManifest.xml权限检查",
+        "回调接口实现检测",
         "自动修复常见配置问题",
-        "生成详细的诊断报告",
-        "支持交互式修复流程"
+        "生成详细诊断报告"
       ]
     },
     "gradle.properties.template": {

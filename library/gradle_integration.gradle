@@ -83,16 +83,20 @@ task checkQuestionnaireSdkVersion {
             connection.setRequestProperty('User-Agent', 'Gradle-Build')
             
             def response = connection.inputStream.text
-            def json = new groovy.json.JsonSlurper().parseText(response)
-            def latestVersion = json.tag_name
+            // 使用简单的字符串解析替代JsonSlurper
+            def tagNamePattern = /"tag_name"\s*:\s*"([^"]+)"/
+            def matcher = response =~ tagNamePattern
+            def latestVersion = matcher ? matcher[0][1] : 'unknown'
             
             println "当前配置版本: ${questionnaire_sdk_version}"
             println "最新可用版本: ${latestVersion}"
             
-            if ("v${questionnaire_sdk_version}" != latestVersion) {
+            if ("v${questionnaire_sdk_version}" != latestVersion && latestVersion != 'unknown') {
                 println "⚠ 发现新版本，建议更新"
-            } else {
+            } else if (latestVersion != 'unknown') {
                 println "✓ 已是最新版本"
+            } else {
+                println "⚠ 无法解析版本信息"
             }
         } catch (Exception e) {
             println "⚠ 无法检查版本: ${e.message}"
